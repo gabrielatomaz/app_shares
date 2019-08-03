@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'json_restful_api.dart';
+import 'complaints.dart';
 
 class FancyFab extends StatefulWidget {
   final Function() onPressed;
@@ -75,7 +76,12 @@ class _FancyFabState extends State<FancyFab>
   Widget complaint() {
     return Container(
       child: FloatingActionButton(
-        onPressed: null,
+        onPressed: () async {
+          Navigator.of(context)
+              .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            return Complaiments();
+          }));
+        },
         tooltip: 'Image',
         heroTag: "img",
         child: Icon(Icons.remove_red_eye),
@@ -98,7 +104,7 @@ class _FancyFabState extends State<FancyFab>
         tooltip: 'Sair',
         heroTag: "logout",
         child: Icon(Icons.exit_to_app),
-        backgroundColor: Color.fromRGBO(49, 107, 90, 1.0),
+        backgroundColor: Color.fromRGBO(91, 91, 91, 1.0),
       ),
     );
   }

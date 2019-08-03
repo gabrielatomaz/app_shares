@@ -9,7 +9,8 @@ Future<Widget> _navigateAndDisplaySelection() async {
   var prefs = await SharedPreferences.getInstance();
   var user = prefs.getStringList('user');
 
-  var jsonUser = user == null ? null : new JsonUser(user: user[0], photo: user[1]);
+  var jsonUser =
+      user == null ? null : new JsonUser(user: user[0], photo: user[1]);
 
   return user == null ? LoginWithRestfulApi() : LoginScreen(user: jsonUser);
 }
@@ -36,7 +37,13 @@ class MyApp extends StatelessWidget {
         home: new FutureBuilder<Widget>(
             future: _navigateAndDisplaySelection(), // a Future<String> or null
             builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
-              return snapshot.data;
+              if (snapshot.hasData) {
+                if (snapshot.data != null) {
+                  return snapshot.data;
+                }
+              } else {
+                return LoginWithRestfulApi();
+              }
             }));
   }
 }

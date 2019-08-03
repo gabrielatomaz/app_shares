@@ -50,10 +50,9 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         var responseJson = json.decode(response.data);
         return responseJson;
-      } else if (response.statusCode == 404) {
+      } else {
         return null;
-      } else
-        throw Exception('Authentication Error');
+      }
     } on DioError catch (exception) {
       if (exception == null ||
           exception.toString().contains('SocketException')) {
@@ -95,13 +94,15 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(
-                      height: 155.0,
+                  Container(
+                      height: 135.0,
+                      margin: EdgeInsets.all(12),
                       child: Image.asset(
                         "assets/logo.png",
                         fit: BoxFit.contain,
                       )),
-                  Padding(
+                  Container(
+                    width: 350,
                     padding: const EdgeInsets.all(12.0),
                     child: TextField(
                       obscureText: false,
@@ -116,7 +117,8 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
                               borderRadius: BorderRadius.circular(10.0))),
                     ),
                   ),
-                  Padding(
+                  Container(
+                    width: 350,
                     padding: const EdgeInsets.all(12.0),
                     child: TextField(
                       obscureText: true,
@@ -131,9 +133,10 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
                               borderRadius: BorderRadius.circular(10.0))),
                     ),
                   ),
-                  SizedBox(
-                    width: 390,
-                    height: 48,
+                  Container(
+                    width: 325,
+                    height: 50,
+                    margin: EdgeInsets.all(8),
                     child: RaisedButton(
                       shape: new RoundedRectangleBorder(
                           borderRadius: new BorderRadius.circular(10.0)),
@@ -149,9 +152,9 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
                         setState(() => _isLoading = false);
 
                         JsonUser user = JsonUser.fromJson(res);
-                        var prefs = await SharedPreferences.getInstance();
-                        prefs.setStringList('user', [user.user, user.photo]);
                         if (user != null) {
+                          var prefs = await SharedPreferences.getInstance();
+                          prefs.setStringList('user', [user.user, user.photo]);
                           Navigator.of(context).push(MaterialPageRoute<Null>(
                               builder: (BuildContext context) {
                             return new LoginScreen(
