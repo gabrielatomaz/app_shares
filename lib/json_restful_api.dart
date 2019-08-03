@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/widgets.dart';
 import 'package:app_shares/fancy_fab.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'json_user.dart';
 import 'fancy_fab.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginWithRestfulApi extends StatefulWidget {
   @override
@@ -150,6 +149,8 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
                         setState(() => _isLoading = false);
 
                         JsonUser user = JsonUser.fromJson(res);
+                        var prefs = await SharedPreferences.getInstance();
+                        prefs.setStringList('user', [user.user, user.photo]);
                         if (user != null) {
                           Navigator.of(context).push(MaterialPageRoute<Null>(
                               builder: (BuildContext context) {
@@ -219,7 +220,7 @@ class LoginScreen extends StatelessWidget {
               Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
-                    "Bem vindo(a), ${user.user}!",
+                    "Bem-vindo(a), ${user.user}!",
                     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                   ))
             ])));

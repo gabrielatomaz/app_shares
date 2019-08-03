@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'json_restful_api.dart';
 
 class FancyFab extends StatefulWidget {
   final Function() onPressed;
@@ -82,6 +84,25 @@ class _FancyFabState extends State<FancyFab>
     );
   }
 
+  Widget logOut() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: () async {
+          var prefs = await SharedPreferences.getInstance();
+          prefs.remove('user');
+          Navigator.of(context)
+              .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            return LoginWithRestfulApi();
+          }));
+        },
+        tooltip: 'Sair',
+        heroTag: "logout",
+        child: Icon(Icons.exit_to_app),
+        backgroundColor: Color.fromRGBO(49, 107, 90, 1.0),
+      ),
+    );
+  }
+
   Widget users() {
     return Container(
       child: FloatingActionButton(
@@ -114,6 +135,14 @@ class _FancyFabState extends State<FancyFab>
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value * 3.0,
+            0.0,
+          ),
+          child: logOut(),
+        ),
         Transform(
           transform: Matrix4.translationValues(
             0.0,
