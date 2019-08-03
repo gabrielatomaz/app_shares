@@ -31,6 +31,32 @@ class _Complaiments extends State<Complaiments> {
     super.initState();
   }
 
+ Widget getComplain(ComplainUser user) {
+    return
+      new Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: Text('${user.user}'),
+              subtitle: Text('${user.reason}'),
+              leading: CircleAvatar(
+                      backgroundImage: MemoryImage(base64Decode(user.photo)))
+            ),
+            new ButtonTheme.bar( // make buttons use the appropriate styles for cards
+              child: new ButtonBar(
+                children: <Widget>[
+                  new FlatButton(
+                    child: const Text('Thumb up'),
+                    onPressed: () { /* ... */ },
+                  ),
+                  new FlatButton(
+                    child: const Text('Thumb down'),
+                    onPressed: () { /* ... */ },
+                  )]))]));
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,11 +65,7 @@ class _Complaiments extends State<Complaiments> {
         body: ListView.builder(
             itemCount: data == null ? 0 : data.length,
             itemBuilder: (BuildContext context, i) {
-              return ListTile(
-                  title: Text(data.elementAt(i).user),
-                  subtitle: Text(data.elementAt(i).reason),
-                  leading: CircleAvatar(
-                      backgroundImage: MemoryImage(base64Decode(data.elementAt(i).photo))));
+              return getComplain(data[i]);
             }));
   }
 }
