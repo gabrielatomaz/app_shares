@@ -38,21 +38,24 @@ class _Complaiments extends State<Complaiments> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ListTile(
-              title: Text('${user.user}'),
-              subtitle: Text('${user.reason}'),
+              title: Text('${user.user}', style: TextStyle(fontSize: 28)),
+              subtitle: Text('${user.reason}', style: TextStyle(fontSize: 20)),
               leading: CircleAvatar(
+                radius: 30,
                       backgroundImage: MemoryImage(base64Decode(user.photo)))
             ),
             new ButtonTheme.bar( // make buttons use the appropriate styles for cards
               child: new ButtonBar(
                 children: <Widget>[
-                  new FlatButton(
-                    child: const Text('Thumb up'),
+                  IconButton(
+                    icon: Icon(Icons.check_circle, size: 35.0),
                     onPressed: () { /* ... */ },
+                    color: Color.fromRGBO(49, 107, 90, 1.0)
                   ),
-                  new FlatButton(
-                    child: const Text('Thumb down'),
+                  IconButton(
+                    icon: Icon(Icons.delete, size: 36.0),
                     onPressed: () { /* ... */ },
+                    color: Color.fromRGBO(49, 107, 90, 1.0)
                   )]))]));
   }
 
