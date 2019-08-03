@@ -202,16 +202,20 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
               Container(
-                width: 130.0,
-                height: 130.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: MemoryImage(base64Decode(user.photo)),
-                      fit: BoxFit.fill
-                ),
-              )
-              ),
+                  width: 145.0,
+                  height: 145.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 4.0,
+                      ),
+                    ],
+                    image: DecorationImage(
+                        image: MemoryImage(base64Decode(user.photo)),
+                        fit: BoxFit.fill),
+                  )),
               Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
