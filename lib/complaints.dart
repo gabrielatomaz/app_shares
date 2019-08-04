@@ -15,6 +15,7 @@ class Complaiments extends StatefulWidget {
 class _Complaiments extends State<Complaiments> {
   String url = 'http://187.84.232.19:5000/api/denuncia';
   List<ComplainUser> data;
+  bool _isLoading = false;
 
   Future _makeRequestComplains() async{
     return await http
@@ -32,11 +33,13 @@ class _Complaiments extends State<Complaiments> {
 
   @override
   initState() {
+    _isLoading = true;
     _makeRequestComplains().then((resp) {
       setState(() {
         var extractdata = json.decode(resp.body);
         var list = extractdata as List;
         data = list.map((i) => ComplainUser.fromJson(i)).toList();
+        _isLoading = false;
       });
     });
 
@@ -44,10 +47,10 @@ class _Complaiments extends State<Complaiments> {
   }
 
   Widget getComplain(ComplainUser user) {
-    return new Card(
+    return Card(
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       ListTile(
-          title: Text('${user.user}', style: TextStyle(fontSize: 27)),
+          title: Text('${user.user}', style: TextStyle(fontSize: 24)),
           subtitle: Text('${user.reason}', style: TextStyle(fontSize: 18)),
           leading: CircleAvatar(
               radius: 30,
@@ -56,7 +59,7 @@ class _Complaiments extends State<Complaiments> {
           // make buttons use the appropriate styles for cards
           child: new ButtonBar(children: <Widget>[
         IconButton(
-            icon: Icon(Icons.check_circle, size: 34.0),
+            icon: Icon(Icons.check_circle, size: 28.0),
             onPressed: () {
               _complainResult(true, user.idUsuer, user.idComplaiment);
               Navigator.of(context).push(
@@ -66,7 +69,7 @@ class _Complaiments extends State<Complaiments> {
             },
             color: Color.fromRGBO(49, 107, 90, 1.0)),
         IconButton(
-            icon: Icon(Icons.delete, size: 35.0),
+            icon: Icon(Icons.delete, size: 29.0),
             onPressed: () {
               _complainResult(false, user.idUsuer, user.idComplaiment);
               Navigator.of(context).push(
@@ -84,7 +87,8 @@ class _Complaiments extends State<Complaiments> {
     return Scaffold(
         floatingActionButton: FancyFab(),
         backgroundColor: Color.fromRGBO(233, 233, 233, 1.0),
-        body: ListView.builder(
+        body: _isLoading
+            ? Center( child: CircularProgressIndicator()) : ListView.builder(
             itemCount: data == null ? 0 : data.length,
             itemBuilder: (BuildContext context, i) {
               return getComplain(data[i]);
