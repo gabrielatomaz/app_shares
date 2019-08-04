@@ -16,49 +16,68 @@ class _Complaiments extends State<Complaiments> {
   String url = 'http://187.84.232.19:5000/api/denuncia';
   List<ComplainUser> data;
 
-  Future<String> makeRequestComplains() async {
-    var response = await http
+  Future _makeRequestComplains() async{
+    return await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+  }
 
-    var extractdata = json.decode(response.body);
-    var list = extractdata as List;
-    data = list.map((i) => ComplainUser.fromJson(i)).toList();
+  Future<bool> _complainResult(
+      bool banir, int idUsuario, int idDenuncia) async {
+    var response = await http.get(
+        Uri.encodeFull("${url}/banir/${banir}/${idUsuario}/${idDenuncia}"),
+        headers: {"Accept": "application/json"});
+
+    return response.statusCode == 200;
   }
 
   @override
   initState() {
-    this.makeRequestComplains();
+    _makeRequestComplains().then((resp) {
+      setState(() {
+        var extractdata = json.decode(resp.body);
+        var list = extractdata as List;
+        data = list.map((i) => ComplainUser.fromJson(i)).toList();
+      });
+    });
+
     super.initState();
   }
 
- Widget getComplain(ComplainUser user) {
-    return
-      new Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              title: Text('${user.user}', style: TextStyle(fontSize: 28)),
-              subtitle: Text('${user.reason}', style: TextStyle(fontSize: 20)),
-              leading: CircleAvatar(
-                radius: 30,
-                      backgroundImage: MemoryImage(base64Decode(user.photo)))
-            ),
-            new ButtonTheme.bar( // make buttons use the appropriate styles for cards
-              child: new ButtonBar(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.check_circle, size: 35.0),
-                    onPressed: () { /* ... */ },
-                    color: Color.fromRGBO(49, 107, 90, 1.0)
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, size: 36.0),
-                    onPressed: () { /* ... */ },
-                    color: Color.fromRGBO(49, 107, 90, 1.0)
-                  )]))]));
+  Widget getComplain(ComplainUser user) {
+    return new Card(
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      ListTile(
+          title: Text('${user.user}', style: TextStyle(fontSize: 27)),
+          subtitle: Text('${user.reason}', style: TextStyle(fontSize: 18)),
+          leading: CircleAvatar(
+              radius: 30,
+              backgroundImage: MemoryImage(base64Decode(user.photo)))),
+      new ButtonTheme.bar(
+          // make buttons use the appropriate styles for cards
+          child: new ButtonBar(children: <Widget>[
+        IconButton(
+            icon: Icon(Icons.check_circle, size: 34.0),
+            onPressed: () {
+              _complainResult(true, user.idUsuer, user.idComplaiment);
+              Navigator.of(context).push(
+                  MaterialPageRoute<Null>(builder: (BuildContext context) {
+                return Complaiments();
+              }));
+            },
+            color: Color.fromRGBO(49, 107, 90, 1.0)),
+        IconButton(
+            icon: Icon(Icons.delete, size: 35.0),
+            onPressed: () {
+              _complainResult(false, user.idUsuer, user.idComplaiment);
+              Navigator.of(context).push(
+                  MaterialPageRoute<Null>(builder: (BuildContext context) {
+                return Complaiments();
+              }));
+            },
+            color: Color.fromRGBO(49, 107, 90, 1.0))
+      ]))
+    ]));
   }
-
 
   @override
   Widget build(BuildContext context) {
