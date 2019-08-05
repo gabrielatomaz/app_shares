@@ -17,11 +17,20 @@ class _UserView extends State<UserView> {
   List<User> data;
   bool _isLoading = false;
   List<DropdownMenuItem<String>> _dropDownMenuItems;
-  String _currentRole;
 
   Future _makeRequestUsers() async {
     return await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
+  }
+
+  Future _changeUserRole(int idUser, String newRole) async {
+    return await http.get(Uri.encodeFull("$url/AlterarCargo/$idUser/$newRole"),
+        headers: {"Accept": "application/json"});
+  }
+
+  Future _deleteUser(int idUser) async {
+    return await http.delete(Uri.encodeFull("$url/$idUser"),
+        headers: {"Accept": "application/json"});
   }
 
   @override
@@ -57,33 +66,41 @@ class _UserView extends State<UserView> {
       ListTile(
           title: Text('${user.name} (${user.user})',
               style: TextStyle(fontSize: 23)),
-              leading: CircleAvatar(
+          leading: CircleAvatar(
               radius: 30,
               backgroundImage: MemoryImage(base64Decode(user.photo)))),
-          ButtonTheme.bar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Container(
-          child: new DropdownButton(
-            value: user.role,
-            items: _dropDownMenuItems,
-            onChanged: changedDropDownItem,
-            style: Theme.of(context).textTheme.title,
-          )
-      ),
+      ButtonTheme.bar(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+        Container(
+            child: DropdownButton(
+                  value: user.role,
+                  items: _dropDownMenuItems,
+                  onChanged: (String changedValue) {
+                    setState(() {
+                      _changeUserRole(user.idUser, changedValue).then((resp) {
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                          return UserView();
+                        }));
+                      });
+                    });
+                  },
+                  style: Theme.of(context).textTheme.title,
+                )),
         IconButton(
             icon: Icon(Icons.delete, size: 29.0),
-            onPressed: () {},
+            onPressed: () async {
+              _deleteUser(user.idUser).then((resp) {
+                Navigator.of(context).push(
+                    MaterialPageRoute<Null>(builder: (BuildContext context) {
+                  return UserView();
+                }));
+              });
+            },
             color: Color.fromRGBO(49, 107, 90, 1.0)),
-        ]))
+      ]))
     ])));
-  }
-
-  void changedDropDownItem(String selectedRole) {
-    setState(() {
-      _currentRole = selectedRole;
-    });
   }
 
   Widget doesntHaveComplain() {
@@ -94,14 +111,14 @@ class _UserView extends State<UserView> {
           Container(
               child: Column(children: <Widget>[
             Icon(
-              Icons.speaker_notes_off,
+              Icons.wc,
               color: Color.fromRGBO(49, 107, 90, 1.0),
               size: 50.0,
             ),
             Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Ooops! Parece que não há nenhuma denuncia no momento!",
+                  "Ooops! Parece que não há nenhum usuário cadastrado!",
                   style: TextStyle(
                       fontSize: 23,
                       color: Colors.black,
@@ -123,10 +140,14 @@ class _UserView extends State<UserView> {
                 : ListView.builder(
                     itemCount: data == null ? 1 : data.length + 1,
                     itemBuilder: (BuildContext context, i) {
-                      if(i == 0)
-                        return Center(child:Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child:Text("Lista de usuários", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold))));
+                      if (i == 0)
+                        return Center(
+                            child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text("Lista de usuários",
+                                    style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold))));
 
                       i -= 1;
 

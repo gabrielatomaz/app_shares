@@ -1,14 +1,14 @@
 class User {
   String user;
   String photo;
-  int idUsuario;
+  int idUser;
   String name;
   String role;
 
   User({
     this.user,
     this.photo,
-    this.idUsuario,
+    this.idUser,
     this.name,
     this.role
   });
@@ -20,7 +20,7 @@ class User {
     return User(
       user: parsedJson['nomeUsuario'],
       photo: parsedJson['foto'],
-      idUsuario: parsedJson['id'],
+      idUser: parsedJson['id'],
       name: parsedJson['nome'],
       role: parsedJson['cargoTipo']
     );
