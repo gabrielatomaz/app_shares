@@ -56,7 +56,7 @@ class _UserView extends State<UserView> {
             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       ListTile(
           title: Text('${user.name} (${user.user})',
-              style: TextStyle(fontSize: 24)),
+              style: TextStyle(fontSize: 23)),
               leading: CircleAvatar(
               radius: 30,
               backgroundImage: MemoryImage(base64Decode(user.photo)))),
@@ -121,8 +121,15 @@ class _UserView extends State<UserView> {
             : (data.length == 0)
                 ? doesntHaveComplain()
                 : ListView.builder(
-                    itemCount: data == null ? 0 : data.length,
+                    itemCount: data == null ? 1 : data.length + 1,
                     itemBuilder: (BuildContext context, i) {
+                      if(i == 0)
+                        return Center(child:Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child:Text("Lista de usuários", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold))));
+
+                      i -= 1;
+
                       return getUser(data[i]);
                     }));
   }

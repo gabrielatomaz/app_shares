@@ -115,8 +115,15 @@ class _Complaiments extends State<Complaiments> {
             : (data.length == 0)
                 ? doesntHaveComplain()
                 : ListView.builder(
-                    itemCount: data == null ? 0 : data.length,
+                    itemCount: data == null ? 1 : data.length + 1,
                     itemBuilder: (BuildContext context, i) {
+                      if(i == 0)
+                        return Center(child:Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child:Text("Lista de denuncias", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold))));
+
+                      i -= 1;
+
                       return getComplain(data[i]);
                     }));
   }
