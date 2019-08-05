@@ -17,7 +17,7 @@ class _Complaiments extends State<Complaiments> {
   List<ComplainUser> data;
   bool _isLoading = false;
 
-  Future _makeRequestComplains() async{
+  Future _makeRequestComplains() async {
     return await http
         .get(Uri.encodeFull(url), headers: {"Accept": "application/json"});
   }
@@ -25,7 +25,7 @@ class _Complaiments extends State<Complaiments> {
   Future<bool> _complainResult(
       bool banir, int idUsuario, int idDenuncia) async {
     var response = await http.get(
-        Uri.encodeFull("${url}/banir/${banir}/${idUsuario}/${idDenuncia}"),
+        Uri.encodeFull("$url/banir/$banir/$idUsuario/$idDenuncia"),
         headers: {"Accept": "application/json"});
 
     return response.statusCode == 200;
@@ -47,7 +47,8 @@ class _Complaiments extends State<Complaiments> {
   }
 
   Widget getComplain(ComplainUser user) {
-    return Card(
+    return Container(
+      child: Card(
         child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
       ListTile(
           title: Text('${user.user}', style: TextStyle(fontSize: 24)),
@@ -56,7 +57,6 @@ class _Complaiments extends State<Complaiments> {
               radius: 30,
               backgroundImage: MemoryImage(base64Decode(user.photo)))),
       new ButtonTheme.bar(
-          // make buttons use the appropriate styles for cards
           child: new ButtonBar(children: <Widget>[
         IconButton(
             icon: Icon(Icons.check_circle, size: 28.0),
@@ -79,7 +79,30 @@ class _Complaiments extends State<Complaiments> {
             },
             color: Color.fromRGBO(49, 107, 90, 1.0))
       ]))
-    ]));
+    ])));
+  }
+
+  Widget doesntHaveComplain() {
+    return Padding( padding: EdgeInsets.all(18.0),child: Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+      Container(
+          child: Column(children: <Widget>[
+        Icon(
+          Icons.speaker_notes_off,
+          color: Color.fromRGBO(49, 107, 90, 1.0),
+          size: 50.0,
+        ),
+        Align(
+            alignment: Alignment.center,
+            child: Text(
+              "Ooops! Parece que não há nenhuma denuncia no momento!",
+              style: TextStyle(
+                  fontSize: 23,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ))
+      ]))
+    ])));
   }
 
   @override
@@ -88,10 +111,13 @@ class _Complaiments extends State<Complaiments> {
         floatingActionButton: FancyFab(),
         backgroundColor: Color.fromRGBO(233, 233, 233, 1.0),
         body: _isLoading
-            ? Center( child: CircularProgressIndicator()) : ListView.builder(
-            itemCount: data == null ? 0 : data.length,
-            itemBuilder: (BuildContext context, i) {
-              return getComplain(data[i]);
-            }));
+            ? Center(child: CircularProgressIndicator())
+            : (data.length == 0)
+                ? doesntHaveComplain()
+                : ListView.builder(
+                    itemCount: data == null ? 0 : data.length,
+                    itemBuilder: (BuildContext context, i) {
+                      return getComplain(data[i]);
+                    }));
   }
 }

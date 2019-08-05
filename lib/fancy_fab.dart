@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'json_restful_api.dart';
 import 'complaints.dart';
+import 'user_view.dart';
 
 class FancyFab extends StatefulWidget {
   final Function() onPressed;
@@ -82,8 +83,8 @@ class _FancyFabState extends State<FancyFab>
             return Complaiments();
           }));
         },
-        tooltip: 'Image',
-        heroTag: "img",
+        tooltip: 'Denuncias',
+        heroTag: "complains",
         child: Icon(Icons.remove_red_eye),
         backgroundColor: Color.fromRGBO(49, 107, 90, 1.0),
       ),
@@ -112,9 +113,14 @@ class _FancyFabState extends State<FancyFab>
   Widget users() {
     return Container(
       child: FloatingActionButton(
-        onPressed: null,
-        heroTag: "inbox",
-        tooltip: 'Inbox',
+        onPressed: () async {
+          Navigator.of(context)
+              .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            return UserView();
+          }));
+        },
+        heroTag: "Usuários",
+        tooltip: 'users',
         child: Icon(Icons.people),
         backgroundColor: Color.fromRGBO(49, 107, 90, 1.0),
       ),

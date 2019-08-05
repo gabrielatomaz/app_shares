@@ -87,6 +87,7 @@ class _LoginWithRestfulApiState extends State<LoginWithRestfulApi> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Color.fromRGBO(233, 233, 233, 1.0),
       body: Center(
         child: _isLoading
             ? CircularProgressIndicator()
